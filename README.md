@@ -4,4 +4,4 @@ I used [rngtng's Launchpad library](https://github.com/rngtng/launchpad) because
 #Quick Tip:
 The folder named "macropad" includes source for a soon to exist GUI macro editor for the Launchpad; currently all it does is change button colors, but eventually you'll be able to assign actions and colors to each button using it.
 
-HelperPad.java includes the more interesting stuff, such as assigning macros and colors to buttons for easy access.
+[HelperPad.java](https://github.com/jocopa3/Launchpad-Tests/blob/master/src/launchpad/HelperPad.java) includes the more interesting stuff, such as assigning macros and colors to buttons for easy access.
