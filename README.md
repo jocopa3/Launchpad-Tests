@@ -1,0 +1,1 @@
+I used [rngtng's Launchpad library](https://github.com/rngtng/launchpad) because I was too lazy to write my own. I may write my own in the future to remove that dependency, but for now it's staying! I also chose to use the source of rngtng's Launchpad library and its required thedmidibus dependency for quick and easy modifications.
