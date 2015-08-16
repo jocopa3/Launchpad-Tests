@@ -19,6 +19,6 @@ public class LaunchPadawan {
      */
     public static void main(String[] args) {
         device = new Launchpad();
-        new PadawanMagic(device);
+        new HelperPad(device);
     }
 }
