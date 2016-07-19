@@ -20,6 +20,7 @@
  */
 package com.rngtng.launchpad;
 
+import java.util.Arrays;
 import java.util.Vector;
 import javax.sound.midi.MidiDevice;
 
@@ -30,12 +31,16 @@ import javax.sound.midi.MidiUnavailableException;
 import themidibus.*;
 
 /**
+ * TODO: implement LaunchpadController and use as standard Launchpad class
+ * 
  * This is the Main class to control your Launchpad. Please the Docs and
  * Examples for usage
  *
  * @example Launchpad
  * @author rngtng - Tobias Bielohlawek
  *
+ * Some edits made to remove Processing dependency and improve some
+ * aspects.
  */
 public class Launchpad implements LMidiCodes, StandardMidiListener {
 
@@ -44,34 +49,35 @@ public class Launchpad implements LMidiCodes, StandardMidiListener {
     public static int width = 8;
     public static int height = width;
 
-    public final String VERSION = "0.2.1";
+    public final String VERSION = "0.2.2";
 
     boolean connected;
 
     Vector<LaunchpadListener> listeners;
 
-//Guess the Launchpad type
-public Launchpad() {
-    this.connected = false;
+    //Guess the Launchpad type
+    public Launchpad() {
+        this.connected = false;
 
-    System.out.println("Guessing Launchpad...");
+        System.out.println("Guessing Launchpad...");
 
-    midiBus = new MidiBus();
-    String[] deviceNames = midiBus.availableInputs();
+        midiBus = new MidiBus();
+        String[] deviceNames = midiBus.availableInputs();
+        listeners = new Vector<LaunchpadListener>();
+        
+        for (int i = 0; i < deviceNames.length && !connected; i++) {
+            if (deviceNames[i].toLowerCase().contains("launchpad") && midiBus.addInput(deviceNames[i]) && midiBus.addOutput(deviceNames[i])) {
+                System.out.println("Launchpad named \"" + deviceNames[i] + "\" was found!");
+                midiBus.addMidiListener(this);
 
-    for(int i = 0; i < deviceNames.length && !connected; i++) {
-        if (deviceNames[i].toLowerCase().contains("launchpad") && midiBus.addInput(deviceNames[i]) && midiBus.addOutput(deviceNames[i])) {
-            System.out.println("Launchpad named \""+deviceNames[i]+"\" was found!");
-            midiBus.addMidiListener(this);
-
-            listeners = new Vector<LaunchpadListener>();
-            //addListener(new MonomeLaunchpad(this));
-            reset();
-            this.connected = true;
-            break;
+                
+                //addListener(new MonomeLaunchpad(this));
+                reset();
+                this.connected = true;
+                break;
+            }
         }
     }
-}
 
     /**
      * a Constructor, usually called in the setup() method in your sketch to
@@ -85,12 +91,12 @@ public Launchpad() {
         this.connected = false;
         midiBus = new MidiBus();
         midiBus.availableInputs();
+        listeners = new Vector<LaunchpadListener>();
+        
         while (!connected) {
             if (midiBus.addInput(inputName) && midiBus.addOutput(outputName)) {
                 midiBus.addMidiListener(this);
-
-                listeners = new Vector<LaunchpadListener>();
-                //addListener(new MonomeLaunchpad(this));
+                
                 reset();
                 this.connected = true;
             }
@@ -102,6 +108,10 @@ public Launchpad() {
         midiBus.close();
     }
 
+    public void close() {
+        midiBus.close();
+    }
+    
     /**
      * return the version of the library.
      *
@@ -112,7 +122,7 @@ public Launchpad() {
     }
 
     /**
-     * @return wheter launchpad is connected
+     * @return whether launchpad is connected
      */
     public boolean connected() {
         return this.connected;
@@ -198,7 +208,32 @@ public Launchpad() {
             output(STATUS_CC, STATUS_NIL, VELOCITY_TEST_LEDS + brightness);
         }
     }
-
+    
+    /**
+     * Sets the duty cycle for the launchpad. In newer launchpads, this would
+     * affect the brightness. 1/5 is the default value. Values higher than 1/3 
+     * aren't very useful and can overload the USB host. 1/18th is the lowest
+     * value and 6/1 is the highest value.
+     *
+     * Parameters (see Launchpad for values):
+     *
+     * @param numerator How many multiplex passes an LED set to the lowest brightness will be on for (range is 1 to 16)
+     * @param denominator Total multiplex passes in a cycle (range is 3 to 18)
+     *
+     * Errors raised:
+     *
+     * [Launchpad::NoOutputAllowedError] when output is not enabled
+     */
+    public void setDutyCycle(int numerator, int denominator) {
+        numerator = Math.max(Math.min(numerator, 16), 1); // Min/max
+        denominator = Math.max(Math.min(numerator, 18), 3);
+        if (numerator < 9) {
+            output(0xB0, 0x1E, ((numerator - 1) * 0x10) + (denominator - 3));
+        } else {
+            output(0xB0, 0x1F, ((numerator - 9) * 0x10) + (denominator - 3));
+        }
+    }
+    
     /**
      * Changes a single Control or Scene Button. Specify the Button by its name
      *
@@ -311,7 +346,7 @@ public Launchpad() {
     public void changeAll(LColor[] colors) {
         int param1, param2;
 
-		// send normal MIDI message to reset rapid LED change pointer
+        // send normal MIDI message to reset rapid LED change pointer
         //  in this case, set mapping mode to x-y layout (the default)
         output(STATUS_CC, STATUS_NIL, GRIDLAYOUT_XY);
 
@@ -352,7 +387,7 @@ public Launchpad() {
     public void changeAll(int[] colors) {
         int param1, param2;
 
-		// send normal MIDI message to reset rapid LED change pointer
+        // send normal MIDI message to reset rapid LED change pointer
         //  in this case, set mapping mode to x-y layout (the default)
         output(STATUS_CC, STATUS_NIL, GRIDLAYOUT_XY);
 
@@ -486,11 +521,25 @@ public Launchpad() {
      *
      * Errors raised: [Launchpad::NoInputAllowedError] when input is not enabled
      */
+    @Override
     public void midiMessage(MidiMessage message, long timestamp) {
         int code = message.getStatus();
         int note = message.getMessage()[1] & 0xFF;
         int velocity = message.getMessage()[2] & 0xFF;
 
+        
+        if(code == STATUS_SYSEX || code == SYSEX_END) {
+            for (LaunchpadListener listener : listeners) {
+                try {
+                    listener.getClass().getMethod("messageRecieved", new Class[]{MidiMessage.class, Long.TYPE});
+                    ((LaunchpadSysExListener)listener).messageRecieved(message, timestamp);
+                } catch (Exception e) {
+                    // Ignore and move on
+                }
+            }
+            return;
+        }
+        
         //process button event	
         if (code == STATUS_CC) {
             for (LaunchpadListener listener : listeners) {
@@ -544,9 +593,12 @@ public Launchpad() {
      * Writes a messages to the MIDI device.
      *
      */
-    private void output(int status, int data1, int data2) {
+    public void output(int status, int data1, int data2) {
         //raise NoOutputAllowedError if @output.nil?
         midiBus.sendMessage(new byte[]{(byte) status, (byte) data1, (byte) data2});
     }
-
+    
+    public void outputRaw(byte[] data) {
+        midiBus.sendMessage(data);
+    }
 }

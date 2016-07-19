@@ -17,5 +17,49 @@
             <file>file:/X:/NioMon/Launchpad/src/launchpad/Renderer.java</file>
             <file>file:/X:/NioMon/Launchpad/src/launchpad/NASA.java</file>
         </group>
+        <group name="LaunchPadMacros">
+            <file>file:/K:/Launchpad/src/launchpad/Buffer.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/LButton.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/PadawanUtil.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/JColorButton.java</file>
+            <file>file:/K:/Launchpad/src/themidibus/ControlChange.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/HelperPad.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/LaunchpadGui.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/PadawanMagic.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/LaunchPadawan.java</file>
+            <file>file:/K:/Launchpad/src/themidibus/MidiBus.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/MathUtils.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/LMidiCodes.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/LColor.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/effects/SimplexNoise.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/MonomeLaunchpad.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/SceneRenderer.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/ButtonRenderer.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/Renderer.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/NASA.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/effects/TextureTest.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/effects/NoiseUtils.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/Action.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/LaunchpadListener.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/KeyEventDemo.java</file>
+            <file>file:/K:/Launchpad/src/macropad/main.java</file>
+            <file>file:/K:/Launchpad/src/macropad/MacroPad.java</file>
+            <file>file:/K:/Launchpad/src/launchpad/PadawanListener.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/Launchpad.java</file>
+        </group>
+        <group name="MapperDB">
+            <file>file:/K:/Launchpad/src/macropad/gui/LaunchpadButton.java</file>
+            <file>file:/K:/Launchpad/src/macropad/ActionEvent.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/JColorButton.java</file>
+            <file>file:/K:/Launchpad/src/macropad/Action.java</file>
+            <file>file:/K:/Launchpad/src/macropad/main.java</file>
+            <file>file:/K:/Launchpad/src/macropad/MacroPad.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/ActionPanel.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/LaunchpadGui.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/Launchpad.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/ActionEditPanel.java</file>
+            <file>file:/K:/Launchpad/src/com/rngtng/launchpad/LState.java</file>
+            <file>file:/K:/Launchpad/src/macropad/gui/ColorPickerPanel.java</file>
+        </group>
     </open-files>
 </project-private>
